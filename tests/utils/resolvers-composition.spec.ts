@@ -1,6 +1,5 @@
 import gql from "graphql-tag";
-import { composeResolvers, ResolversComposerMapping } from "../../src/utils";
-import { makeExecutableSchema } from "@kamilkisiela/graphql-tools";
+import { composeResolvers, ResolversComposerMapping, buildSchemaWithResolvers } from "../../src/utils";
 import { execute } from "graphql";
 import { $$asyncIterator, createAsyncIterator } from 'iterall';
 
@@ -24,7 +23,7 @@ describe('Resolvers composition', () => {
             },
         }
         const composedResolvers = composeResolvers(resolvers, resolversComposition);
-        const schema = makeExecutableSchema({
+        const schema = buildSchemaWithResolvers({
             typeDefs,
             resolvers: composedResolvers,
         });
@@ -58,7 +57,7 @@ describe('Resolvers composition', () => {
             },
         }
         const composedResolvers = composeResolvers(resolvers, resolversComposition);
-        const schema = makeExecutableSchema({
+        const schema = buildSchemaWithResolvers({
             typeDefs,
             resolvers: composedResolvers,
         });
@@ -134,7 +133,7 @@ describe('Resolvers composition', () => {
             }
         }
         const composedResolvers = composeResolvers(resolvers, resolversComposition);
-        const schema = makeExecutableSchema({
+        const schema = buildSchemaWithResolvers({
             typeDefs,
             resolvers: composedResolvers,
         });

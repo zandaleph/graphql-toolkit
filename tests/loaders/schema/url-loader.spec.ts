@@ -1,7 +1,6 @@
 jest.mock('cross-fetch');
-import { makeExecutableSchema } from '@kamilkisiela/graphql-tools';
 import { introspectionFromSchema, GraphQLSchema } from 'graphql';
-import { loadSchema } from '../../../src';
+import { loadSchema, buildSchemaWithResolvers } from '../../../src';
 
 const SHOULD_NOT_GET_HERE_ERROR = 'SHOULD_NOT_GET_HERE';
 
@@ -14,7 +13,7 @@ describe('Schema URL Loader', () => {
     resetMocks();
   });
 
-  const VALID_INTROSPECTION = introspectionFromSchema(makeExecutableSchema({ typeDefs: 'type Query { a: String }' }));
+  const VALID_INTROSPECTION = introspectionFromSchema(buildSchemaWithResolvers({ typeDefs: 'type Query { a: String }' }));
 
   describe('handle', () => {
     it('Should throw an error when introspection is not valid', async () => {

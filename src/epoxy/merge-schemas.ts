@@ -1,18 +1,15 @@
 import { GraphQLSchema, DocumentNode } from "graphql";
-import { IResolvers, SchemaDirectiveVisitor, makeExecutableSchema, IResolverValidationOptions, ILogger } from "@kamilkisiela/graphql-tools";
+import { IResolvers } from "@kamilkisiela/graphql-tools";
 import { mergeTypeDefs } from "./typedefs-mergers/merge-typedefs";
 import { asArray } from "../utils/helpers";
 import { mergeResolvers } from "./resolvers-mergers/merge-resolvers";
-import { extractResolversFromSchema, ResolversComposerMapping, composeResolvers } from "../utils";
+import { extractResolversFromSchema, ResolversComposerMapping, composeResolvers, buildSchemaWithResolvers } from "../utils";
 
 export interface MergeSchemasConfig<Resolvers extends IResolvers = IResolvers> {
     schemas: GraphQLSchema[];
     typeDefs?: (DocumentNode | string)[] | DocumentNode | string;
     resolvers?: Resolvers | Resolvers[];
     resolversComposition?: ResolversComposerMapping<Resolvers>;
-    schemaDirectives?: { [directiveName: string]: typeof SchemaDirectiveVisitor };
-    resolverValidationOptions?: IResolverValidationOptions;
-    logger?: ILogger;
     exclusions?: string[];
 }
 
@@ -21,12 +18,9 @@ export function mergeSchemas({
     typeDefs,
     resolvers,
     resolversComposition,
-    schemaDirectives,
-    resolverValidationOptions,
-    logger,
     exclusions,
 }: MergeSchemasConfig) {
-    return makeExecutableSchema({
+    return buildSchemaWithResolvers({
         typeDefs: mergeTypeDefs([
             ...schemas,
             ...typeDefs ? asArray(typeDefs) : []
@@ -37,10 +31,7 @@ export function mergeSchemas({
                 ...resolvers ? asArray<IResolvers>(resolvers) : []
             ], { exclusions }),
             resolversComposition || {}
-        ),
-        schemaDirectives,
-        resolverValidationOptions,
-        logger
+        )
     })
 }
 
@@ -49,9 +40,6 @@ export async function mergeSchemasAsync({
     typeDefs,
     resolvers,
     resolversComposition,
-    schemaDirectives,
-    resolverValidationOptions,
-    logger,
     exclusions,
 }: MergeSchemasConfig) {
     const [
@@ -72,11 +60,8 @@ export async function mergeSchemasAsync({
                 resolversComposition || {}
             )),
     ])
-    return makeExecutableSchema({
+    return buildSchemaWithResolvers({
         typeDefs: typeDefsOutput,
-        resolvers: resolversOutput,
-        schemaDirectives,
-        resolverValidationOptions,
-        logger
+        resolvers: resolversOutput
     })
 }

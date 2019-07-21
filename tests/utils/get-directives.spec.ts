@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'graphql';
-import { makeExecutableSchema } from '@kamilkisiela/graphql-tools';
 import { getDirectives } from '../../src/utils/get-directives';
+import { buildSchemaWithResolvers } from '../../src';
 
 describe('getDirectives', () => {
   it('should return the correct directives map when no directives specified', () => {
@@ -9,7 +9,7 @@ describe('getDirectives', () => {
         test: String
       }
     `;
-    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
     const directivesMap = getDirectives(schema, schema.getQueryType());
 
     expect(directivesMap).toEqual({});
@@ -22,7 +22,7 @@ describe('getDirectives', () => {
       }
     `;
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
     const directivesMap = getDirectives(schema, schema.getQueryType().getFields()['test']);
     expect(directivesMap).toEqual({
       deprecated: {
@@ -40,7 +40,7 @@ describe('getDirectives', () => {
       directive @mydir on FIELD_DEFINITION
     `;
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
     const directivesMap = getDirectives(schema, schema.getQueryType().getFields()['test']);
     expect(directivesMap).toEqual({
       mydir: {}
@@ -56,7 +56,7 @@ describe('getDirectives', () => {
       directive @mydir(f1: String) on FIELD_DEFINITION
     `;
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
     const directivesMap = getDirectives(schema, schema.getQueryType().getFields()['test']);
     expect(directivesMap).toEqual({
       mydir: {
@@ -74,7 +74,7 @@ describe('getDirectives', () => {
       directive @mydir(f1: String) on FIELD_DEFINITION
     `;
 
-    const schema = makeExecutableSchema({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
     const directivesMap = getDirectives(schema, schema.getQueryType().getFields()['test']);
     expect(directivesMap).toEqual({
       mydir: {}

@@ -1,12 +1,12 @@
-import { makeExecutableSchema } from "@kamilkisiela/graphql-tools";
 import { mergeSchemas } from '../../src/epoxy';
 import gql from "graphql-tag";
 import { graphql, buildSchema, GraphQLScalarType, Kind, buildASTSchema, GraphQLSchema, ListValueNode } from "graphql";
 import { mergeSchemasAsync } from "../../src/epoxy/merge-schemas";
+import { buildSchemaWithResolvers } from '../../src';
 
 describe('Merge Schemas', () => {
     it('should merge two valid executable schemas', async () => {
-        const fooSchema = makeExecutableSchema({
+        const fooSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     foo: String
@@ -18,7 +18,7 @@ describe('Merge Schemas', () => {
                 }
             }
         });
-        const barSchema = makeExecutableSchema({
+        const barSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     bar: String
@@ -46,7 +46,7 @@ describe('Merge Schemas', () => {
         expect(data.bar).toBe('BAR');
     });
     it('should merge two valid executable schemas async', async () => {
-        const fooSchema = makeExecutableSchema({
+        const fooSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     foo: String
@@ -58,7 +58,7 @@ describe('Merge Schemas', () => {
                 }
             }
         });
-        const barSchema = makeExecutableSchema({
+        const barSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     bar: String
@@ -86,7 +86,7 @@ describe('Merge Schemas', () => {
         expect(data.bar).toBe('BAR');
     });
     it('should merge two valid executable schemas with extra resolvers', async () => {
-        const fooSchema = makeExecutableSchema({
+        const fooSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     foo: String
@@ -98,7 +98,7 @@ describe('Merge Schemas', () => {
                 }
             }
         });
-        const barSchema = makeExecutableSchema({
+        const barSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     bar: String
@@ -134,7 +134,7 @@ describe('Merge Schemas', () => {
         expect(data.qux).toBe('QUX');
     });
     it('should merge two valid executable schemas with extra typeDefs and resolvers', async () => {
-        const fooSchema = makeExecutableSchema({
+        const fooSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     foo: String
@@ -146,7 +146,7 @@ describe('Merge Schemas', () => {
                 }
             }
         });
-        const barSchema = makeExecutableSchema({
+        const barSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     bar: String
@@ -186,7 +186,7 @@ describe('Merge Schemas', () => {
         expect(data.qux).toBe('QUX');
     });
     it('should merge two valid schemas by keeping their directives to be used in extra typeDefs', async () => {
-        const fooSchema = makeExecutableSchema({
+        const fooSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 directive @fooDirective on FIELD_DEFINITION
                 type Query {
@@ -199,7 +199,7 @@ describe('Merge Schemas', () => {
                 }
             }
         });
-        const barSchema = makeExecutableSchema({
+        const barSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 type Query {
                     bar: String
@@ -239,7 +239,7 @@ describe('Merge Schemas', () => {
         expect(data.qux).toBe('QUX');
     });
     it('should merge valid schemas with interfaces correctly', async () => {
-        const fooSchema = makeExecutableSchema({
+        const fooSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 interface Foo {
                     foo: String
@@ -254,7 +254,7 @@ describe('Merge Schemas', () => {
                 }
             `
         })
-        const barSchema = makeExecutableSchema({
+        const barSchema = buildSchemaWithResolvers({
             typeDefs: gql`
                 interface Foo {
                     foo: String
@@ -312,7 +312,7 @@ describe('Merge Schemas', () => {
 
     it('should merge scalars (part of resolvers)', async () => {
         const now = new Date();
-        const schemaA = makeExecutableSchema({
+        const schemaA = buildSchemaWithResolvers({
             typeDefs: [`scalar Date`, `type Query { a: Date }`],
             resolvers: {
                 Query: {
@@ -335,7 +335,7 @@ describe('Merge Schemas', () => {
                 })
             }
         });
-        const schemaB = makeExecutableSchema({
+        const schemaB = buildSchemaWithResolvers({
             typeDefs: [`type Query { b: String }`],
         });
 

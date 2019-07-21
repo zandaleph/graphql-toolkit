@@ -1,9 +1,9 @@
 import { mergeTypeDefs, mergeGraphQLTypes } from '../../src/epoxy/typedefs-mergers/merge-typedefs';
-import { makeExecutableSchema } from '@kamilkisiela/graphql-tools';
 import { buildSchema, buildClientSchema, print, parse } from 'graphql';
 import { stripWhitespaces } from './utils';
 import gql from 'graphql-tag';
 import * as introspectionSchema from './schema.json';
+import { buildSchemaWithResolvers } from '../../src';
 
 const clientType = /* GraphQL */ `
   type Client {
@@ -189,7 +189,7 @@ describe('Merge TypeDefs', () => {
     it('should accept root schema object', () => {
       const mergedSchema = mergeTypeDefs(['type RootQuery { f1: String }', 'type RootQuery { f2: String }', 'schema { query: RootQuery }', 'type MyType { field: Int } type RootQuery { f3: MyType }']);
 
-      const schema = makeExecutableSchema({
+      const schema = buildSchemaWithResolvers({
         typeDefs: mergedSchema,
       });
       const queryType = schema.getQueryType();
@@ -261,7 +261,7 @@ describe('Merge TypeDefs', () => {
 
       expect(print(mergedSchema).indexOf('scalar')).not.toEqual(-1);
 
-      const schema = makeExecutableSchema({
+      const schema = buildSchemaWithResolvers({
         typeDefs: mergedSchema,
       });
 
@@ -470,10 +470,10 @@ describe('Merge TypeDefs', () => {
 
     it('should merge two GraphQLSchema with directives correctly', () => {
       const merged = mergeTypeDefs([
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: [`type Query { f1: MyType }`, `type MyType { f2: String }`],
         }),
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: [`directive @id on FIELD_DEFINITION`, `type MyType2 { f2: String @id }`],
         }),
       ]);
@@ -590,9 +590,8 @@ describe('Merge TypeDefs', () => {
 
     it('should handle GraphQLSchema correctly', () => {
       const merged = mergeTypeDefs([
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: ['type Query { f1: String }'],
-          allowUndefinedInResolve: true,
         }),
         'type Query { f2: String }',
       ]);
@@ -612,13 +611,11 @@ describe('Merge TypeDefs', () => {
 
     it('should merge GraphQL Schemas that have schema definition', () => {
       const merged = mergeTypeDefs([
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: ['type RootQuery { f1: String }'],
-          allowUndefinedInResolve: true,
         }),
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: ['type RootQuery { f2: String }', 'schema { query: RootQuery }'],
-          allowUndefinedInResolve: true,
         }),
       ]);
 
@@ -637,9 +634,8 @@ describe('Merge TypeDefs', () => {
 
     it('should handle all merged correctly', () => {
       const merged = mergeTypeDefs([
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: ['type Query { f1: String }'],
-          allowUndefinedInResolve: true,
         }),
         'type Query { f2: String }',
         gql`
@@ -665,9 +661,8 @@ describe('Merge TypeDefs', () => {
 
     it('should allow GraphQLSchema with empty Query', () => {
       const merged = mergeTypeDefs([
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: ['type MyType { f1: String }'],
-          allowUndefinedInResolve: true,
         }),
       ]);
 
@@ -680,13 +675,11 @@ describe('Merge TypeDefs', () => {
 
     it('should allow GraphQLSchema with empty Query', () => {
       const merged = mergeTypeDefs([
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: ['type MyType { f1: String }'],
-          allowUndefinedInResolve: true,
         }),
-        makeExecutableSchema({
+        buildSchemaWithResolvers({
           typeDefs: ['type MyType { f2: String }'],
-          allowUndefinedInResolve: true,
         }),
       ]);
 
@@ -719,7 +712,7 @@ describe('Merge TypeDefs', () => {
       );
     });
     it('should handle extend types when GraphQLSchema is the source', () => {
-      const schema = makeExecutableSchema({
+      const schema = buildSchemaWithResolvers({
         typeDefs: [
           `
           type Query {

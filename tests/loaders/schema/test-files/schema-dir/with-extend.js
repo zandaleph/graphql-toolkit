@@ -1,7 +1,7 @@
-const { makeExecutableSchema } = require('graphql-tools');
+const { buildASTSchema } = require('graphql');
 
-const schema = makeExecutableSchema({
-  typeDefs: /* GraphQL */ `
+const schema = buildASTSchema(
+  /* GraphQL */ `
     type User {
       a: String
     }
@@ -14,6 +14,6 @@ const schema = makeExecutableSchema({
       hello: String
     }
   `
-});
+);
 
 module.exports = schema;
