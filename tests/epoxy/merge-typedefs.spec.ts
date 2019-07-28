@@ -1,9 +1,8 @@
 import { mergeTypeDefs, mergeGraphQLTypes } from '../../src/epoxy/typedefs-mergers/merge-typedefs';
 import { buildSchema, buildClientSchema, print, parse } from 'graphql';
 import { stripWhitespaces } from './utils';
-import gql from 'graphql-tag';
-import * as introspectionSchema from './schema.json';
 import { buildSchemaWithResolvers } from '../../src';
+const introspectionSchema = require('./schema.json');
 
 const clientType = /* GraphQL */ `
   type Client {
@@ -471,10 +470,10 @@ describe('Merge TypeDefs', () => {
     it('should merge two GraphQLSchema with directives correctly', () => {
       const merged = mergeTypeDefs([
         buildSchemaWithResolvers({
-          typeDefs: [`type Query { f1: MyType }`, `type MyType { f2: String }`],
+          typeDefs: `type Query { f1: MyType } type MyType { f2: String }`,
         }),
         buildSchemaWithResolvers({
-          typeDefs: [`directive @id on FIELD_DEFINITION`, `type MyType2 { f2: String @id }`],
+          typeDefs: `directive @id on FIELD_DEFINITION type MyType2 { f2: String @id }`,
         }),
       ]);
 
@@ -483,14 +482,14 @@ describe('Merge TypeDefs', () => {
 
     it('should merge when directive uses enum', () => {
       const merged = mergeTypeDefs([
-        gql`
+        /* GraphQL */ `
           directive @date(format: DateFormat) on FIELD_DEFINITION
           enum DateFormat {
             LOCAL
             ISO
           }
         `,
-        gql`
+        /* GraphQL */ `
           scalar Date
 
           type Query {
@@ -544,9 +543,9 @@ describe('Merge TypeDefs', () => {
       );
     });
 
-    it('should handle compiled gql correctly', () => {
+    it('should handle compiled /* GraphQL */  correctly', () => {
       const merged = mergeTypeDefs([
-        gql`
+        /* GraphQL */ `
           type Query {
             f1: String
           }
@@ -565,9 +564,9 @@ describe('Merge TypeDefs', () => {
       );
     });
 
-    it('should handle compiled gql and strings correctly', () => {
+    it('should handle compiled /* GraphQL */  and strings correctly', () => {
       const merged = mergeTypeDefs([
-        gql`
+        /* GraphQL */ `
           type Query {
             f1: String
           }
@@ -591,7 +590,7 @@ describe('Merge TypeDefs', () => {
     it('should handle GraphQLSchema correctly', () => {
       const merged = mergeTypeDefs([
         buildSchemaWithResolvers({
-          typeDefs: ['type Query { f1: String }'],
+          typeDefs: 'type Query { f1: String }',
         }),
         'type Query { f2: String }',
       ]);
@@ -612,10 +611,10 @@ describe('Merge TypeDefs', () => {
     it('should merge GraphQL Schemas that have schema definition', () => {
       const merged = mergeTypeDefs([
         buildSchemaWithResolvers({
-          typeDefs: ['type RootQuery { f1: String }'],
+          typeDefs: 'type RootQuery { f1: String }',
         }),
         buildSchemaWithResolvers({
-          typeDefs: ['type RootQuery { f2: String }', 'schema { query: RootQuery }'],
+          typeDefs: 'type RootQuery { f2: String } schema { query: RootQuery }',
         }),
       ]);
 
@@ -635,10 +634,10 @@ describe('Merge TypeDefs', () => {
     it('should handle all merged correctly', () => {
       const merged = mergeTypeDefs([
         buildSchemaWithResolvers({
-          typeDefs: ['type Query { f1: String }'],
+          typeDefs: 'type Query { f1: String }',
         }),
         'type Query { f2: String }',
-        gql`
+        /* GraphQL */ `
           type Query {
             f3: String
           }
@@ -662,7 +661,7 @@ describe('Merge TypeDefs', () => {
     it('should allow GraphQLSchema with empty Query', () => {
       const merged = mergeTypeDefs([
         buildSchemaWithResolvers({
-          typeDefs: ['type MyType { f1: String }'],
+          typeDefs: 'type MyType { f1: String }',
         }),
       ]);
 
@@ -676,10 +675,10 @@ describe('Merge TypeDefs', () => {
     it('should allow GraphQLSchema with empty Query', () => {
       const merged = mergeTypeDefs([
         buildSchemaWithResolvers({
-          typeDefs: ['type MyType { f1: String }'],
+          typeDefs: 'type MyType { f1: String }',
         }),
         buildSchemaWithResolvers({
-          typeDefs: ['type MyType { f2: String }'],
+          typeDefs: 'type MyType { f2: String }',
         }),
       ]);
 
@@ -713,7 +712,7 @@ describe('Merge TypeDefs', () => {
     });
     it('should handle extend types when GraphQLSchema is the source', () => {
       const schema = buildSchemaWithResolvers({
-        typeDefs: [
+        typeDefs: mergeTypeDefs([
           `
           type Query {
             foo: String
@@ -732,7 +731,7 @@ describe('Merge TypeDefs', () => {
             id: ID
           }
         `,
-        ],
+        ]),
       });
       const merged = mergeTypeDefs([schema]);
       const printed = stripWhitespaces(print(merged));

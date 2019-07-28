@@ -59,7 +59,6 @@ describe('documentsFromGlob', () => {
   it('Should ignore schema definitions', async () => {
     const glob = join(__dirname, './test-files/', '*.graphql');
     const result = await loadDocuments(glob);
-    console.log(result.map(a => a.content.definitions));
     expect(result.length).toBe(2);
   });
 

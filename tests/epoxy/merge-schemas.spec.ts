@@ -1,13 +1,12 @@
 import { mergeSchemas } from '../../src/epoxy';
-import gql from "graphql-tag";
-import { graphql, buildSchema, GraphQLScalarType, Kind, buildASTSchema, GraphQLSchema, ListValueNode } from "graphql";
+import { graphql, buildSchema, GraphQLScalarType, Kind, buildASTSchema, GraphQLSchema, ListValueNode, parse } from "graphql";
 import { mergeSchemasAsync } from "../../src/epoxy/merge-schemas";
 import { buildSchemaWithResolvers } from '../../src';
 
 describe('Merge Schemas', () => {
     it('should merge two valid executable schemas', async () => {
         const fooSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     foo: String
                 }
@@ -19,7 +18,7 @@ describe('Merge Schemas', () => {
             }
         });
         const barSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     bar: String
                 }
@@ -47,7 +46,7 @@ describe('Merge Schemas', () => {
     });
     it('should merge two valid executable schemas async', async () => {
         const fooSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     foo: String
                 }
@@ -59,7 +58,7 @@ describe('Merge Schemas', () => {
             }
         });
         const barSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     bar: String
                 }
@@ -87,7 +86,7 @@ describe('Merge Schemas', () => {
     });
     it('should merge two valid executable schemas with extra resolvers', async () => {
         const fooSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     foo: String
                 }
@@ -99,7 +98,7 @@ describe('Merge Schemas', () => {
             }
         });
         const barSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     bar: String
                     qux: String
@@ -135,7 +134,7 @@ describe('Merge Schemas', () => {
     });
     it('should merge two valid executable schemas with extra typeDefs and resolvers', async () => {
         const fooSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     foo: String
                 }
@@ -147,7 +146,7 @@ describe('Merge Schemas', () => {
             }
         });
         const barSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     bar: String
                 }
@@ -161,7 +160,7 @@ describe('Merge Schemas', () => {
         const { errors, data } = await graphql({
             schema: mergeSchemas({
                 schemas: [fooSchema, barSchema],
-                typeDefs: gql`
+                typeDefs: /* GraphQL */ `
                     type Query {
                         qux: String
                     }
@@ -187,7 +186,7 @@ describe('Merge Schemas', () => {
     });
     it('should merge two valid schemas by keeping their directives to be used in extra typeDefs', async () => {
         const fooSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 directive @fooDirective on FIELD_DEFINITION
                 type Query {
                     foo: String
@@ -200,7 +199,7 @@ describe('Merge Schemas', () => {
             }
         });
         const barSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     bar: String
                 }
@@ -214,7 +213,7 @@ describe('Merge Schemas', () => {
         const { errors, data } = await graphql({
             schema: mergeSchemas({
                 schemas: [fooSchema, barSchema],
-                typeDefs: gql`
+                typeDefs: /* GraphQL */ `
                     type Query {
                         qux: String @fooDirective
                     }
@@ -240,7 +239,7 @@ describe('Merge Schemas', () => {
     });
     it('should merge valid schemas with interfaces correctly', async () => {
         const fooSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 interface Foo {
                     foo: String
                 }
@@ -255,7 +254,7 @@ describe('Merge Schemas', () => {
             `
         })
         const barSchema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 interface Foo {
                     foo: String
                 }
@@ -313,7 +312,10 @@ describe('Merge Schemas', () => {
     it('should merge scalars (part of resolvers)', async () => {
         const now = new Date();
         const schemaA = buildSchemaWithResolvers({
-            typeDefs: [`scalar Date`, `type Query { a: Date }`],
+            typeDefs: `
+                        scalar Date
+                        type Query { a: Date }
+                       `,
             resolvers: {
                 Query: {
                     a: () => now,
@@ -336,7 +338,7 @@ describe('Merge Schemas', () => {
             }
         });
         const schemaB = buildSchemaWithResolvers({
-            typeDefs: [`type Query { b: String }`],
+            typeDefs: `type Query { b: String }`,
         });
 
         const schema = mergeSchemas({ schemas: [schemaA, schemaB] });
@@ -360,15 +362,15 @@ describe('Merge Schemas', () => {
 
     it('should merge when directive uses enum', () => {
         const merged = mergeSchemas({
-            schemas: [buildASTSchema(gql`
+            schemas: [buildASTSchema(/* GraphQL */ parse(`
                 directive @date(format: DateFormat) on FIELD_DEFINITION
                 
                 enum DateFormat {
                     LOCAL
                     ISO
                 }
-            `)],
-            typeDefs: gql`
+            `))],
+            typeDefs: /* GraphQL */ `
                 scalar Date
 
                 type Query {

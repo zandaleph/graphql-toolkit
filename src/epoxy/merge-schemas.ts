@@ -1,14 +1,13 @@
 import { GraphQLSchema, DocumentNode } from "graphql";
 import { IResolvers } from "@kamilkisiela/graphql-tools";
 import { mergeTypeDefs } from "./typedefs-mergers/merge-typedefs";
-import { asArray } from "../utils/helpers";
 import { mergeResolvers } from "./resolvers-mergers/merge-resolvers";
 import { extractResolversFromSchema, ResolversComposerMapping, composeResolvers, buildSchemaWithResolvers } from "../utils";
 
 export interface MergeSchemasConfig<Resolvers extends IResolvers = IResolvers> {
     schemas: GraphQLSchema[];
-    typeDefs?: (DocumentNode | string)[] | DocumentNode | string;
-    resolvers?: Resolvers | Resolvers[];
+    typeDefs?: DocumentNode | string;
+    resolvers?: Resolvers;
     resolversComposition?: ResolversComposerMapping<Resolvers>;
     exclusions?: string[];
 }
@@ -16,21 +15,21 @@ export interface MergeSchemasConfig<Resolvers extends IResolvers = IResolvers> {
 export function mergeSchemas({
     schemas,
     typeDefs,
-    resolvers,
-    resolversComposition,
+    resolvers = {},
+    resolversComposition = {},
     exclusions,
 }: MergeSchemasConfig) {
     return buildSchemaWithResolvers({
-        typeDefs: mergeTypeDefs([
+        typeDefs: mergeTypeDefs(typeDefs ? [
             ...schemas,
-            ...typeDefs ? asArray(typeDefs) : []
-        ], { exclusions }),
+            typeDefs,
+        ] : schemas, { exclusions }),
         resolvers: composeResolvers(
             mergeResolvers([
                 ...schemas.map(schema => extractResolversFromSchema(schema)),
-                ...resolvers ? asArray<IResolvers>(resolvers) : []
+                resolvers,
             ], { exclusions }),
-            resolversComposition || {}
+            resolversComposition,
         )
     })
 }
@@ -38,26 +37,26 @@ export function mergeSchemas({
 export async function mergeSchemasAsync({
     schemas,
     typeDefs,
-    resolvers,
-    resolversComposition,
+    resolvers = {},
+    resolversComposition = {},
     exclusions,
 }: MergeSchemasConfig) {
     const [
         typeDefsOutput,
         resolversOutput,
     ] = await Promise.all([
-        mergeTypeDefs([
+        mergeTypeDefs(typeDefs ? [
             ...schemas,
-            ...typeDefs ? asArray(typeDefs) : []
-        ], { exclusions }),
+            typeDefs,
+        ] : schemas, { exclusions }),
         Promise
             .all(schemas.map(async schema => extractResolversFromSchema(schema)))
             .then(extractedResolvers => composeResolvers(
                 mergeResolvers([
                     ...extractedResolvers,
-                    ...resolvers ? asArray<IResolvers>(resolvers) : []
+                    resolvers,
                 ], { exclusions }),
-                resolversComposition || {}
+                resolversComposition,
             )),
     ])
     return buildSchemaWithResolvers({
