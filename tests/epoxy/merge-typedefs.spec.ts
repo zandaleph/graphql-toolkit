@@ -543,13 +543,13 @@ describe('Merge TypeDefs', () => {
       );
     });
 
-    it('should handle compiled /* GraphQL */  correctly', () => {
+    it('should handle parsed typeDefs correctly', () => {
       const merged = mergeTypeDefs([
-        /* GraphQL */ `
+        /* GraphQL */ parse(`
           type Query {
             f1: String
           }
-        `,
+        `),
       ]);
 
       expect(stripWhitespaces(print(merged))).toBe(
@@ -564,13 +564,13 @@ describe('Merge TypeDefs', () => {
       );
     });
 
-    it('should handle compiled /* GraphQL */  and strings correctly', () => {
+    it('should handle parsed typeDefs and strings correctly', () => {
       const merged = mergeTypeDefs([
-        /* GraphQL */ `
+        parse(`
           type Query {
             f1: String
           }
-        `,
+        `),
         'type Query { f2: String }',
       ]);
 
