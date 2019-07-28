@@ -1,25 +1,18 @@
 import { GraphQLObjectType, GraphQLScalarType, GraphQLInterfaceType, GraphQLUnionType, GraphQLEnumType, buildASTSchema, DocumentNode, parse } from 'graphql';
-import { mergeTypeDefs, mergeResolvers } from '../epoxy';
 import { ResolversComposerMapping, composeResolvers } from './resolvers-composition';
 
 export interface BuildSchemaWithResolversOptions {
-    typeDefs: string | string[] | DocumentNode | DocumentNode[];
+    typeDefs: string | DocumentNode;
     resolvers?: any;
     resolversComposition?: ResolversComposerMapping;
 }
 
 export function buildSchemaWithResolvers({ typeDefs, resolvers, resolversComposition }: BuildSchemaWithResolversOptions) {
-    if (typeDefs instanceof Array) {
-        typeDefs = mergeTypeDefs(typeDefs);
-    }
     if (typeof typeDefs === 'string') {
         typeDefs = parse(typeDefs);
     }
     const schema = buildASTSchema(typeDefs);
     if (resolvers) {
-        if (resolvers instanceof Array) {
-            resolvers = mergeResolvers(resolvers);
-        }
         if (resolversComposition) {
             resolvers = composeResolvers(resolvers, resolversComposition);
         }
