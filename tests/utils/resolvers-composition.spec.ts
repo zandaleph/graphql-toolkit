@@ -1,12 +1,11 @@
-import gql from "graphql-tag";
 import { composeResolvers, ResolversComposerMapping, buildSchemaWithResolvers } from "../../src/utils";
-import { execute } from "graphql";
+import { execute, parse } from "graphql";
 import { $$asyncIterator, createAsyncIterator } from 'iterall';
 
 describe('Resolvers composition', () => {
     it('should compose regular resolvers', async () => {
         const getFoo = () => 'FOO';
-        const typeDefs = gql`
+        const typeDefs = /* GraphQL */ `
             type Query {
             foo: String
             }
@@ -30,15 +29,14 @@ describe('Resolvers composition', () => {
         
         const result = await execute({
             schema,
-    
-            document: gql`query { foo }`,
+            document: /* GraphQL */ parse(`query { foo }`),
           });
           expect(result.errors).toBeFalsy();
           expect(result.data.foo).toBe('FOOFOO');
     })
     it('should compose resolvers with resolve field', async () => {
         const getFoo = () => 'FOO';
-        const typeDefs = gql`
+        const typeDefs = /* GraphQL */ `
             type Query {
             foo: String
             }
@@ -65,7 +63,7 @@ describe('Resolvers composition', () => {
         const result = await execute({
             schema,
     
-            document: gql`query { foo }`,
+            document: parse(/* GraphQL */ `query { foo }`),
           });
           expect(result.errors).toBeFalsy();
           expect(result.data.foo).toBe('FOOFOO');
@@ -114,7 +112,7 @@ describe('Resolvers composition', () => {
     })
     it('should be able to take nested composition objects', async () => {
         const getFoo = () => 'FOO';
-        const typeDefs = gql`
+        const typeDefs = /* GraphQL */ `
             type Query {
             foo: String
             }
@@ -140,7 +138,7 @@ describe('Resolvers composition', () => {
         
         const result = await execute({
             schema,
-            document: gql`query { foo }`,
+            document: parse(/* GraphQL */ `query { foo }`),
           });
           expect(result.errors).toBeFalsy();
           expect(result.data.foo).toBe('FOOFOO');

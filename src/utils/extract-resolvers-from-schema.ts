@@ -1,4 +1,4 @@
-import { GraphQLSchema, GraphQLScalarType, GraphQLObjectType, GraphQLInterfaceType, DocumentNode, buildASTSchema, GraphQLEnumType, GraphQLUnionType } from "graphql";
+import { GraphQLSchema, GraphQLScalarType, GraphQLObjectType, GraphQLInterfaceType, DocumentNode, buildASTSchema, GraphQLEnumType, GraphQLUnionType, parse } from "graphql";
 import { IResolvers } from "@kamilkisiela/graphql-tools";
 import { extractFieldResolversFromObjectType } from "./extract-field-resolvers-from-object-type";
 
@@ -11,6 +11,9 @@ export function extractResolversFromSchema(schema: GraphQLSchema, options ?: Ext
     const typeMap = schema.getTypeMap();
     let selectedTypeNames: string[];
     if( options && options.selectedTypeDefs) {
+        if(typeof options.selectedTypeDefs === 'string') {
+            options.selectedTypeDefs = parse(options.selectedTypeDefs);
+        }
         const invalidSchema = buildASTSchema(options.selectedTypeDefs);
         selectedTypeNames = Object.keys(invalidSchema.getTypeMap());
     }

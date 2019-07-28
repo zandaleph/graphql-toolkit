@@ -1,11 +1,10 @@
 import { extractResolversFromSchema } from '../../src/utils/extract-resolvers-from-schema';
-import gql from 'graphql-tag';
 import { buildSchemaWithResolvers } from '../../src';
 
 describe('extractResolversFromSchema', () => {
     it('should extract correct resolvers from a schema with correct type mapping', async () => {
         const schema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type Query {
                     foo: String
                 }
@@ -21,7 +20,7 @@ describe('extractResolversFromSchema', () => {
     });
     it('should extract correct resolvers from a schema with selectedTypeDefs', async () => {
         const schema = buildSchemaWithResolvers({
-            typeDefs: gql`
+            typeDefs: /* GraphQL */ `
                 type TypeA {
                     id: ID
                     fieldA: String
@@ -49,7 +48,7 @@ describe('extractResolversFromSchema', () => {
             }
         });
         const TypeBResolvers = extractResolversFromSchema(schema, {
-            selectedTypeDefs: gql`
+            selectedTypeDefs: /* GraphQL */ `
                 type TypeB {
                     id: ID
                     fieldB: String
