@@ -3,18 +3,16 @@ import { IResolvers } from "@kamilkisiela/graphql-tools";
 import { extractFieldResolversFromObjectType } from "./extract-field-resolvers-from-object-type";
 
 export interface ExtractResolversFromSchemaOptions {
-    selectedTypeDefs?: DocumentNode;
+    selectedTypeDefs?: DocumentNode | string;
 }
 
 export function extractResolversFromSchema(schema: GraphQLSchema, options ?: ExtractResolversFromSchemaOptions): IResolvers {
     const resolvers: IResolvers = {};
     const typeMap = schema.getTypeMap();
     let selectedTypeNames: string[];
-    if( options && options.selectedTypeDefs) {
-        if(typeof options.selectedTypeDefs === 'string') {
-            options.selectedTypeDefs = parse(options.selectedTypeDefs);
-        }
-        const invalidSchema = buildASTSchema(options.selectedTypeDefs);
+    const selectedTypeDefs = options && options.selectedTypeDefs && (typeof options.selectedTypeDefs === 'string' ? parse(options.selectedTypeDefs) : options.selectedTypeDefs);
+    if(selectedTypeDefs) {
+        const invalidSchema = buildASTSchema(selectedTypeDefs);
         selectedTypeNames = Object.keys(invalidSchema.getTypeMap());
     }
     for (const typeName in typeMap) {
@@ -27,7 +25,7 @@ export function extractResolversFromSchema(schema: GraphQLSchema, options ?: Ext
                 resolvers[typeName] = typeDef as GraphQLScalarType;
             } else if (typeDef instanceof GraphQLObjectType || typeDef instanceof GraphQLInterfaceType) {
                 resolvers[typeName] = extractFieldResolversFromObjectType(typeDef, {
-                    selectedTypeDefs: options && options.selectedTypeDefs
+                    selectedTypeDefs,
                 });
             } else if (typeDef instanceof GraphQLEnumType) {
                 const enumValues = typeDef.getValues();
