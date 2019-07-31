@@ -3,6 +3,7 @@ import { DocumentNode } from 'graphql/language/ast';
 import { introspectionQuery, IntrospectionQuery } from 'graphql/utilities/introspectionQuery';
 import { buildClientSchema } from 'graphql/utilities/buildClientSchema';
 import { parse } from 'graphql/language/parser';
+import { ExecutionResult } from 'graphql/execution/execute';
 
 export type FetchFn = WindowOrWorkerGlobalScope['fetch'];
 

@@ -3,6 +3,7 @@ import { extractType, isWrappingTypeNode, isListTypeNode, isNonNullTypeNode, pri
 import { mergeDirectives } from './directives';
 import { isNotEqual } from '../../utils/helpers';
 import { mergeArguments } from './arguments';
+import { FieldDefinitionNode, InputValueDefinitionNode, NameNode, TypeNode } from 'graphql/language/ast';
 
 function fieldAlreadyExists(fieldsArr: ReadonlyArray<any>, otherField: any): boolean {
   const result: FieldDefinitionNode | null = fieldsArr.find(field => field.name.value === otherField.name.value);
