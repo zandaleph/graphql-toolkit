@@ -19,14 +19,14 @@ export async function loadFromUrl(url: string, options?: LoadFromUrlOptions): Pr
     }
   }
   
-  const fetch: typeof import('cross-fetch').fetch = eval(`typeof fetch === 'undefined' ? require('cross-fetch').fetch : fetch`);
+  const fetchFn: typeof import('cross-fetch').fetch = typeof fetch === 'undefined' ? eval(`require('cross-fetch').fetch`) : fetch;
   let extraHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json',
     ...headers,
   };
 
-  const response = await fetch(url, {
+  const response = await fetchFn(url, {
     method: 'POST',
     body: JSON.stringify({
       query: introspectionQuery,

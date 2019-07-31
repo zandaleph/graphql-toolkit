@@ -1,4 +1,4 @@
-import AggregateError from 'aggregate-error';
+import * as AggregateError from 'aggregate-error';
 import { DocumentFile } from '../loaders/load-typedefs';
 import { specifiedRules } from 'graphql/validation/specifiedRules';
 import { GraphQLError } from 'graphql/error/GraphQLError';

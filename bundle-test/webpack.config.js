@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'development',
+    mode: 'production',
     output: {
         filename: 'index.js'
     },
@@ -10,8 +10,5 @@ module.exports = {
             'graphql-toolkit': path.join(__dirname, '..')
         },
         modules: ['node_modules', '../node_modules']
-    },
-    optimization: {
-        usedExports: true
     }
 }

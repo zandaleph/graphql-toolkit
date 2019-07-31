@@ -9,7 +9,7 @@ describe('getDirectives', () => {
         test: String
       }
     `;
-    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {} });
     const directivesMap = getDirectives(schema, schema.getQueryType());
 
     expect(directivesMap).toEqual({});
@@ -22,7 +22,7 @@ describe('getDirectives', () => {
       }
     `;
 
-    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {} });
     const directivesMap = getDirectives(schema, schema.getQueryType().getFields()['test']);
     expect(directivesMap).toEqual({
       deprecated: {
@@ -40,7 +40,7 @@ describe('getDirectives', () => {
       directive @mydir on FIELD_DEFINITION
     `;
 
-    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {} });
     const directivesMap = getDirectives(schema, schema.getQueryType().getFields()['test']);
     expect(directivesMap).toEqual({
       mydir: {}
@@ -56,7 +56,7 @@ describe('getDirectives', () => {
       directive @mydir(f1: String) on FIELD_DEFINITION
     `;
 
-    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {} });
     const directivesMap = getDirectives(schema, schema.getQueryType().getFields()['test']);
     expect(directivesMap).toEqual({
       mydir: {
@@ -74,7 +74,7 @@ describe('getDirectives', () => {
       directive @mydir(f1: String) on FIELD_DEFINITION
     `;
 
-    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {}, allowUndefinedInResolve: true }) as GraphQLSchema;
+    const schema = buildSchemaWithResolvers({ typeDefs, resolvers: {} });
     const directivesMap = getDirectives(schema, schema.getQueryType().getFields()['test']);
     expect(directivesMap).toEqual({
       mydir: {}

@@ -1,8 +1,6 @@
 import { IResolvers, IFieldResolver } from '@kamilkisiela/graphql-tools';
 import { chainFunctions, asArray } from './helpers';
 import { flattenArray } from './flatten-array';
-import get from 'lodash/get';
-import set from 'lodash/set';
 
 export type ResolversComposition<Resolver extends IFieldResolver<any, any> = IFieldResolver<any, any>> = (next: Resolver) => Resolver;
 
@@ -57,6 +55,26 @@ function resolveRelevantMappings<Resolvers extends IResolvers>(resolvers: Resolv
   }
 
   return [];
+}
+
+const get = (obj: any, path: string) => {
+  const subPathArr = path.split('.');
+  let deep = obj;
+  for(let subPath of subPathArr) {
+    deep = deep[subPath];
+  }
+  return deep;
+}
+
+const set = (obj: any, path: string, val: any) => {
+  const subPathArr = path.split('.');
+  let deep = obj;
+  for(let subPath of subPathArr) {
+    if (subPath === subPathArr[subPathArr.length - 1]) {
+      deep[subPath] = val;
+    }
+    deep = deep[subPath];
+  }
 }
 
 /**
