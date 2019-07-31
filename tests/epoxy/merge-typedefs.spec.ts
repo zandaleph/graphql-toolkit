@@ -525,6 +525,45 @@ describe('Merge TypeDefs', () => {
         `)
       );
     });
+
+    it('should merge arguments', () => {
+      const merged = mergeTypeDefs([
+        /* GraphQL */ `
+          type Foo {
+            f1(a: String): String
+          }
+
+          type Query {
+            q1: String
+          }
+        `,
+        /* GraphQL */ `
+          type Foo {
+            f1(a: String, b: String): String
+          }
+
+          type Query {
+            q1(success: Boolean): String
+          }
+        `,
+      ]);
+
+      expect(stripWhitespaces(print(merged))).toBe(
+        stripWhitespaces(/* GraphQL */ `
+          type Foo {
+            f1(a: String, b: String): String
+          }
+
+          type Query {
+            q1(success: Boolean): String
+          }
+
+          schema {
+            query: Query
+          }
+        `)
+      );
+    });
   });
 
   describe('input arguments', () => {
@@ -1068,7 +1107,7 @@ describe('Merge TypeDefs', () => {
       }
     `);
     const mergedTypes = mergeTypeDefs([userF1Type, userF2Type], {
-      exclusions: ['User.f1']
+      exclusions: ['User.f1'],
     });
     expect(stripWhitespaces(print(mergedTypes))).toBe(userF2Type);
   });
@@ -1084,7 +1123,7 @@ describe('Merge TypeDefs', () => {
       }
     `);
     const mergedTypes = mergeTypeDefs([queryType, userType], {
-      exclusions: ['Query.*']
+      exclusions: ['Query.*'],
     });
     expect(stripWhitespaces(print(mergedTypes))).toBe(userType);
   });
