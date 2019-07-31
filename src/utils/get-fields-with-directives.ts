@@ -1,4 +1,5 @@
-import { DocumentNode, ObjectTypeDefinitionNode, ValueNode, Kind } from 'graphql';
+import { ObjectTypeDefinitionNode, ValueNode, DocumentNode } from 'graphql/language/ast';
+import { Kind } from 'graphql/language/kinds';
 
 export type DirectiveArgs = { [name: string]: any };
 export type DirectiveUsage = { name: string; args: DirectiveArgs };

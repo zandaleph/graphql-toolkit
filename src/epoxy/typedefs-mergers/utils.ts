@@ -1,27 +1,8 @@
-import {
-  TypeNode,
-  DefinitionNode,
-  EnumTypeDefinitionNode,
-  NamedTypeNode,
-  ListTypeNode,
-  NonNullTypeNode,
-  ObjectTypeDefinitionNode,
-  Source,
-  UnionTypeDefinitionNode,
-  ScalarTypeDefinitionNode,
-  InputObjectTypeDefinitionNode,
-  GraphQLSchema,
-  InterfaceTypeDefinitionNode,
-  DirectiveDefinitionNode,
-  SchemaDefinitionNode,
-  ObjectTypeExtensionNode,
-  InputObjectTypeExtensionNode,
-  EnumTypeExtensionNode,
-  UnionTypeExtensionNode,
-  ScalarTypeExtensionNode,
-  InterfaceTypeExtensionNode,
-  Kind,
-} from 'graphql';
+import { Source } from 'graphql/language/source';
+import { ObjectTypeDefinitionNode, DefinitionNode, ObjectTypeExtensionNode, EnumTypeDefinitionNode, EnumTypeExtensionNode, UnionTypeDefinitionNode, UnionTypeExtensionNode, ScalarTypeDefinitionNode, ScalarTypeExtensionNode, InputObjectTypeDefinitionNode, InputObjectTypeExtensionNode, InterfaceTypeDefinitionNode, InterfaceTypeExtensionNode, DirectiveDefinitionNode, TypeNode, NamedTypeNode, SchemaDefinitionNode, ListTypeNode, NonNullTypeNode } from 'graphql/language/ast';
+import { GraphQLSchema } from 'graphql/type/schema';
+import { Kind } from 'graphql/language/kinds';
+
 
 export function isStringTypes(types: any): types is string {
   return typeof types === 'string';

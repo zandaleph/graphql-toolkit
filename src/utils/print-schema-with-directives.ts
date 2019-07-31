@@ -1,4 +1,6 @@
-import { GraphQLSchema, print, printSchema } from 'graphql';
+import { GraphQLSchema } from 'graphql/type/schema';
+import { printSchema } from 'graphql/utilities/schemaPrinter';
+import { print } from 'graphql/language/printer';
 
 export function printSchemaWithDirectives(schema: GraphQLSchema): string {
   const allTypes = schema.getTypeMap();

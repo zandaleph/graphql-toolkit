@@ -1,7 +1,7 @@
-import { EnumTypeDefinitionNode, EnumTypeExtensionNode } from 'graphql';
 import { mergeDirectives } from './directives';
 import { mergeEnumValues } from './enum-values';
 import { Config } from './merge-typedefs';
+import { EnumTypeDefinitionNode, EnumTypeExtensionNode } from 'graphql/language/ast';
 
 export function mergeEnum(e1: EnumTypeDefinitionNode | EnumTypeExtensionNode, e2: EnumTypeDefinitionNode | EnumTypeExtensionNode, config?: Config): EnumTypeDefinitionNode | EnumTypeExtensionNode {
   if (e2) {
@@ -12,7 +12,7 @@ export function mergeEnum(e1: EnumTypeDefinitionNode | EnumTypeExtensionNode, e2
       loc: e1.loc,
       directives: mergeDirectives(e1.directives, e2.directives, config),
       values: mergeEnumValues(e1.values, e2.values),
-    } as any;
+    };
   }
 
   return e1;

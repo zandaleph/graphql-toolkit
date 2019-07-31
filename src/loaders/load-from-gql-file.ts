@@ -1,5 +1,6 @@
-import { DocumentNode, parse } from 'graphql';
 import { readFileSync } from 'fs';
+import { DocumentNode } from 'graphql/language/ast';
+import { parse } from 'graphql/language/parser';
 
 export async function loadFromGqlFile(filePath: string): Promise<DocumentNode> {
   const content = readFileSync(filePath, 'utf-8').trim();

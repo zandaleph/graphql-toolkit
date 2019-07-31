@@ -1,24 +1,17 @@
-import {
-  buildASTSchema,
-  printSchema,
-  DefinitionNode,
-  DocumentNode,
-  GraphQLSchema,
-  parse,
-  print,
-  Source,
-  GraphQLObjectType,
-  isSpecifiedScalarType,
-  isIntrospectionType,
-  GraphQLScalarType,
-  printType,
-  ObjectTypeExtensionNode,
-  GraphQLNamedType,
-  Kind,
-} from 'graphql';
 import { isGraphQLSchema, isSourceTypes, isStringTypes, isSchemaDefinition } from './utils';
 import { MergedResultMap, mergeGraphQLNodes } from './merge-nodes';
 import { resetComments, printWithComments } from './comments';
+import { Source } from 'graphql/language/source';
+import { DocumentNode, DefinitionNode, ObjectTypeExtensionNode } from 'graphql/language/ast';
+import { GraphQLSchema } from 'graphql/type/schema';
+import { Kind } from 'graphql/language/kinds';
+import { buildASTSchema } from 'graphql/utilities/buildASTSchema';
+import { parse } from 'graphql/language/parser';
+import { print } from 'graphql/language/printer';
+import { printSchema, printType } from 'graphql/utilities/schemaPrinter';
+import { GraphQLObjectType, GraphQLScalarType, GraphQLNamedType } from 'graphql/type/definition';
+import { isSpecifiedScalarType } from 'graphql/type/scalars';
+import { isIntrospectionType } from 'graphql/type/introspection';
 
 type Omit<T, K extends keyof any> = Pick<T, Exclude<keyof T, K>>;
 

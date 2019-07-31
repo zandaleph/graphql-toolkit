@@ -1,8 +1,6 @@
-import { IOptions, sync } from 'glob';
-import * as glob from 'glob';
+import { IOptions } from 'glob';
 import { extname } from 'path';
-import { readFileSync, readFile } from 'fs';
-import { print } from 'graphql';
+import { print } from 'graphql/language/printer';
 import { IResolvers } from '@kamilkisiela/graphql-tools';
 
 const DEFAULT_SCHEMA_EXTENSIONS = ['gql', 'graphql', 'graphqls', 'ts', 'js'];
@@ -17,6 +15,7 @@ function isDirectory(path: string) {
 }
 
 function scanForFiles(globStr: string, globOptions: IOptions = {}): string[] {
+  const { sync } = eval(`require('glob')`);
   return sync(globStr, { absolute: true, ...globOptions });
 }
 
@@ -93,6 +92,7 @@ export function loadSchemaFiles(path: string, options: LoadSchemaFilesOptions = 
 
       return extractedExport;
     } else {
+      const { readFileSync } = eval(`require('fs')`);
       return readFileSync(path, { encoding: 'utf-8' });
     }
   }).filter(v => v);
@@ -139,7 +139,8 @@ export function loadResolversFiles<Resolvers extends IResolvers = IResolvers>(pa
 }
 
 function scanForFilesAsync(globStr: string, globOptions: IOptions = {}): Promise<string[]> {
-  return new Promise((resolve, reject) => glob(globStr, { absolute: true, ...globOptions }, (err, matches) => {
+  const glob = eval(`require('glob')`);
+  return new Promise((resolve, reject) => glob(globStr, { absolute: true, ...globOptions }, (err: Error, matches: string[]) => {
     if (err) {
       reject(err);
     }
@@ -172,7 +173,8 @@ export async function loadSchemaFilesAsync(path: string, options: LoadSchemaFile
       return extractedExport;
     } else {
       return new Promise((resolve, reject) => {
-        readFile(path, { encoding: 'utf-8' }, (err, data) => {
+        const { readFile } = eval(`require('fs')`);
+        readFile(path, { encoding: 'utf-8' }, (err: Error, data: any) => {
           if (err) {
             reject(err);
           }

@@ -1,7 +1,12 @@
-import { DocumentNode, GraphQLSchema, Source, parse, IntrospectionQuery, buildClientSchema } from 'graphql';
 import { readFileSync } from 'fs';
 import { extractDocumentStringFromCodeFile, ExtractOptions } from '../utils/extract-document-string-from-code-file';
 import { printSchemaWithDirectives } from '../utils';
+import { IntrospectionQuery } from 'graphql/utilities/introspectionQuery';
+import { GraphQLSchema } from 'graphql/type/schema';
+import { DocumentNode } from 'graphql/language/ast';
+import { parse } from 'graphql/language/parser';
+import { buildClientSchema } from 'graphql/utilities/buildClientSchema';
+import { Source } from 'graphql/language/source';
 
 function isSchemaText(obj: any): obj is string {
   return typeof obj === 'string';

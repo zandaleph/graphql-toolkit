@@ -7,11 +7,8 @@ module.exports = {
     },
     resolve: {
         alias: {
-            'graphql-toolkit': path.join(__dirname, '../dist/esnext')
+            'graphql-toolkit': path.join(__dirname, '..')
         },
         modules: ['node_modules', '../node_modules']
-    },
-    externals: {
-        fs: 'empty'
     }
 }

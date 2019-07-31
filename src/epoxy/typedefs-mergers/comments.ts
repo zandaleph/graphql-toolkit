@@ -1,4 +1,6 @@
-import { getDescription, StringValueNode, TypeDefinitionNode, FieldDefinitionNode, InputValueDefinitionNode, DocumentNode, ASTNode, NameNode, TypeNode, visit, VisitFn } from 'graphql';
+import { TypeDefinitionNode, FieldDefinitionNode, InputValueDefinitionNode, StringValueNode, DocumentNode, NameNode, TypeNode, ASTNode } from 'graphql/language/ast';
+import { getDescription } from 'graphql/utilities/buildASTSchema';
+import { VisitFn, visit } from 'graphql/language/visitor';
 
 let commentsRegistry: {
   [path: string]: string[];

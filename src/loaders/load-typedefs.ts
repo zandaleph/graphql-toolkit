@@ -1,16 +1,12 @@
 import { ExtractOptions } from './../utils/extract-document-string-from-code-file';
-import { DocumentNode, parse, concatAST, Kind } from 'graphql';
-import * as isValidPath from 'is-valid-path';
-import * as isGlob from 'is-glob';
-import { sync as globSync } from 'glob';
 import { isUri } from 'valid-url';
-import { loadFromUrl } from './load-from-url';
 import { extname, isAbsolute, resolve as resolvePath } from 'path';
-import { loadFromJsonFile } from './load-from-json-file';
-import { loadFromGqlFile } from './load-from-gql-file';
-import { loadFromCodeFile } from './load-from-code-file';
 import { debugLog } from '../utils/debugLog';
 import { fixWindowsPath } from '../utils/fix-windows-path';
+import { DocumentNode } from 'graphql/language/ast';
+import { parse } from 'graphql/language/parser';
+import { concatAST } from 'graphql/utilities/concatAST';
+import { Kind } from 'graphql/language/kinds';
 
 const GQL_EXTENSIONS = ['.gql', '.graphql', '.graphqls'];
 const CODE_FILE_EXTENSIONS = ['.ts', '.tsx', '.js', '.jsx'];
@@ -42,8 +38,10 @@ export async function loadTypedefs<AdditionalConfig = any>(pointToSchema: string
         content: parse(schemaPath),
       });
     } else if (!isUri(schemaPath)) {
+      const { sync: globSync } = eval(`require('glob')`);
       const fixedPath = fixWindowsPath(schemaPath);
-
+      const isValidPath = eval(`require('is-valid-path')`);
+      const isGlob = eval(`require('is-glob')`);
       if (isValidPath(fixedPath) || isGlob(fixedPath)) {
         const relevantFiles = filterFiles(
           !isGlob(fixedPath)
@@ -58,6 +56,7 @@ export async function loadTypedefs<AdditionalConfig = any>(pointToSchema: string
         found.push(...(await Promise.all(relevantFiles.map(async p => ({ filePath: p, content: await loadSingleFile(p, { noRequire: options.noRequire, tagPluck: options.tagPluck || {} }, cwd) })))));
       }
     } else if (isUri(schemaPath)) {
+      const { loadFromUrl } = await import('./load-from-url');
       found.push({
         filePath: schemaPath,
         content: await loadFromUrl(schemaPath, options as AdditionalConfig),
@@ -100,10 +99,13 @@ export async function loadSingleFile(filePath: string, options: ExtractOptions &
 
   try {
     if (extension === '.json') {
+      const { loadFromJsonFile } = eval(`require('./load-from-json-file')`);
       return await loadFromJsonFile(fullPath);
     } else if (GQL_EXTENSIONS.includes(extension)) {
+      const { loadFromGqlFile } = eval(`require('./load-from-gql-file')`);
       return await loadFromGqlFile(fullPath);
     } else if (CODE_FILE_EXTENSIONS.includes(extension)) {
+      const { loadFromCodeFile } = eval(`require('./load-from-code-file')`);
       return await loadFromCodeFile(fullPath, options);
     }
   } catch (e) {

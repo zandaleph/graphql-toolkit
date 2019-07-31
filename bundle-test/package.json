@@ -5,7 +5,9 @@
   "license": "MIT",
   "scripts": {
     "pretest": "webpack",
-    "test": "bundlesize"
+    "test": "bundlesize",
+    "preanalyze": "webpack --profile --json > stats.json",
+    "analyze": "webpack-bundle-analyzer stats.json"
   },
   "bundlesize": [
     {
@@ -17,6 +19,7 @@
   "devDependencies": {
     "bundlesize": "0.18.0",
     "webpack": "4.38.0",
+    "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "3.3.6"
   }
 }
