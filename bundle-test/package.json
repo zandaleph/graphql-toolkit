@@ -5,18 +5,22 @@
   "license": "MIT",
   "scripts": {
     "pretest": "webpack",
-    "test": "bundlesize"
+    "test": "bundlesize",
+    "preanalyze": "webpack --profile --json > dist/stats.json",
+    "analyze": "webpack-bundle-analyzer dist/stats.json"
   },
+  "sideEffects": false,
   "bundlesize": [
     {
       "path": "./dist/index.js",
-      "maxSize": "130 kB",
+      "maxSize": "122 kB",
       "compression": "none"
     }
   ],
   "devDependencies": {
     "bundlesize": "0.18.0",
-    "webpack": "4.36.1",
+    "webpack": "4.38.0",
+    "webpack-bundle-analyzer": "^3.4.1",
     "webpack-cli": "3.3.6"
   }
 }

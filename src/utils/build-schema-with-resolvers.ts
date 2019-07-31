@@ -1,5 +1,8 @@
-import { GraphQLObjectType, GraphQLScalarType, GraphQLInterfaceType, GraphQLUnionType, GraphQLEnumType, buildASTSchema, DocumentNode, parse } from 'graphql';
 import { ResolversComposerMapping, composeResolvers } from './resolvers-composition';
+import { parse } from 'graphql/language/parser';
+import { buildASTSchema } from 'graphql/utilities/buildASTSchema';
+import { GraphQLScalarType, GraphQLInterfaceType, GraphQLObjectType, GraphQLEnumType, GraphQLUnionType } from 'graphql/type/definition';
+import { DocumentNode } from 'graphql/language/ast';
 
 export interface BuildSchemaWithResolversOptions {
     typeDefs: string | DocumentNode;

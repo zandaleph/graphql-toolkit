@@ -1,7 +1,8 @@
-import { get, set } from 'lodash';
 import { IResolvers, IFieldResolver } from '@kamilkisiela/graphql-tools';
 import { chainFunctions, asArray } from './helpers';
 import { flattenArray } from './flatten-array';
+import get from 'lodash/get';
+import set from 'lodash/set';
 
 export type ResolversComposition<Resolver extends IFieldResolver<any, any> = IFieldResolver<any, any>> = (next: Resolver) => Resolver;
 

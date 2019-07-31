@@ -1,4 +1,6 @@
-import { GraphQLObjectType, GraphQLInterfaceType, DocumentNode, buildASTSchema } from "graphql";
+import { DocumentNode } from 'graphql/language/ast';
+import { GraphQLObjectType, GraphQLInterfaceType } from 'graphql/type/definition';
+import { buildASTSchema } from 'graphql/utilities/buildASTSchema';
 
 export interface IFieldResolvers {
     [fieldName: string]: { subscribe: (...args: any[]) => any, resolve: (...args: any[]) => any } | ((...args: any[]) => any);

@@ -1,7 +1,7 @@
 import { Config } from './merge-typedefs';
-import { InterfaceTypeDefinitionNode, InterfaceTypeExtensionNode } from 'graphql';
 import { mergeFields } from './fields';
 import { mergeDirectives } from './directives';
+import { InterfaceTypeDefinitionNode, InterfaceTypeExtensionNode } from 'graphql/language/ast';
 
 export function mergeInterface(
   node: InterfaceTypeDefinitionNode | InterfaceTypeExtensionNode,

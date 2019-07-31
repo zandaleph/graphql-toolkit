@@ -1,6 +1,8 @@
-import { introspectionQuery, buildClientSchema, DocumentNode, parse, IntrospectionQuery } from 'graphql';
 import { printSchemaWithDirectives } from '../utils/print-schema-with-directives';
-import { fetch } from 'cross-fetch';
+import { DocumentNode } from 'graphql/language/ast';
+import { introspectionQuery, IntrospectionQuery } from 'graphql/utilities/introspectionQuery';
+import { buildClientSchema } from 'graphql/utilities/buildClientSchema';
+import { parse } from 'graphql/language/parser';
 
 export interface LoadFromUrlOptions {
   headers?: { [key: string]: string }[] | { [key: string]: string };
@@ -16,7 +18,8 @@ export async function loadFromUrl(url: string, options?: LoadFromUrlOptions): Pr
       headers = options.headers;
     }
   }
-
+  
+  const fetch: typeof import('cross-fetch').fetch = eval(`typeof fetch === 'undefined' ? require('cross-fetch').fetch : fetch`);
   let extraHeaders = {
     Accept: 'application/json',
     'Content-Type': 'application/json',

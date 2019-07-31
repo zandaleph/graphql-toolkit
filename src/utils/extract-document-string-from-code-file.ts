@@ -1,4 +1,5 @@
-import { Source, parse } from 'graphql';
+import { Source } from 'graphql/language/source';
+import { parse } from 'graphql/language/parser';
 
 export interface ExtractOptions {
   tagPluck?: {

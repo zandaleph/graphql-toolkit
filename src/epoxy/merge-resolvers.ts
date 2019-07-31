@@ -1,5 +1,5 @@
 import { IResolvers } from '@kamilkisiela/graphql-tools';
-import * as deepMerge from 'deepmerge';
+import { all } from 'deepmerge';
 import { GraphQLScalarType } from 'graphql/type/definition';
 
 export type ResolversFactory<TContext> = (...args: any[]) => IResolvers<any, TContext>;
@@ -52,10 +52,10 @@ export function mergeResolvers<TContext, T extends ResolversDefinition<TContext>
   if (resolversFactories.length) {
     result = ((...args: any[]) => {
       const resultsOfFactories = resolversFactories.map(factory => factory(...args));
-      return deepMerge.all([...resolvers, ...resultsOfFactories], { isMergeableObject }) as any;
+      return all([...resolvers, ...resultsOfFactories], { isMergeableObject }) as any;
     }) as any;
   } else {
-    result = deepMerge.all(resolvers, { isMergeableObject }) as IResolvers<any, TContext> as T;
+    result = all(resolvers, { isMergeableObject }) as IResolvers<any, TContext> as T;
   }
   if (options && options.exclusions) {
     for (const exclusion of options.exclusions) {
@@ -93,10 +93,10 @@ export async function mergeResolversAsync<TContext, T extends ResolversDefinitio
   if (resolversFactories.length) {
     result = ((...args: any[]) => {
       const resultsOfFactories = resolversFactories.map(factory => factory(...args));
-      return deepMerge.all([...resolvers, ...resultsOfFactories], { isMergeableObject }) as any;
+      return all([...resolvers, ...resultsOfFactories], { isMergeableObject }) as any;
     }) as any;
   } else {
-    result = deepMerge.all(resolvers, { isMergeableObject }) as IResolvers<any, TContext> as T;
+    result = all(resolvers, { isMergeableObject }) as IResolvers<any, TContext> as T;
   }
   if (options && options.exclusions) {
     for (const exclusion of options.exclusions) {

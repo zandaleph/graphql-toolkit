@@ -1,6 +1,10 @@
-import { GraphQLSchema, GraphQLScalarType, GraphQLObjectType, GraphQLInterfaceType, DocumentNode, buildASTSchema, GraphQLEnumType, GraphQLUnionType, parse } from "graphql";
 import { IResolvers } from "@kamilkisiela/graphql-tools";
 import { extractFieldResolversFromObjectType } from "./extract-field-resolvers-from-object-type";
+import { DocumentNode } from 'graphql/language/ast';
+import { GraphQLSchema } from 'graphql/type/schema';
+import { buildASTSchema } from 'graphql/utilities/buildASTSchema';
+import { GraphQLScalarType, GraphQLObjectType, GraphQLInterfaceType, GraphQLEnumType, GraphQLUnionType } from 'graphql/type/definition';
+import { parse } from 'graphql/language/parser';
 
 export interface ExtractResolversFromSchemaOptions {
     selectedTypeDefs?: DocumentNode | string;

@@ -1,6 +1,9 @@
-import { DocumentNode, IntrospectionQuery, buildClientSchema, parse } from 'graphql';
 import { existsSync, readFileSync } from 'fs';
 import { printSchemaWithDirectives } from '../utils/print-schema-with-directives';
+import { IntrospectionQuery } from 'graphql/utilities/introspectionQuery';
+import { DocumentNode } from 'graphql/language/ast';
+import { buildClientSchema } from 'graphql/utilities/buildClientSchema';
+import { parse } from 'graphql/language/parser';
 
 function stripBOM(content: string): string {
   content = content.toString();

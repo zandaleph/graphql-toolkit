@@ -1,8 +1,8 @@
 import { Config } from './merge-typedefs';
-import { ObjectTypeDefinitionNode, ObjectTypeExtensionNode } from 'graphql';
 import { mergeFields } from './fields';
 import { mergeDirectives } from './directives';
 import { mergeNamedTypeArray } from './merge-named-type-array';
+import { ObjectTypeDefinitionNode, ObjectTypeExtensionNode } from 'graphql/language/ast';
 
 export function mergeType(node: ObjectTypeDefinitionNode | ObjectTypeExtensionNode, existingNode: ObjectTypeDefinitionNode | ObjectTypeExtensionNode, config?: Config): ObjectTypeDefinitionNode | ObjectTypeExtensionNode {
   if (existingNode) {

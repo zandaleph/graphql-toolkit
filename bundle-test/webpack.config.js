@@ -1,17 +1,17 @@
 const path = require('path');
 
 module.exports = {
-    mode: 'production',
+    mode: 'development',
     output: {
         filename: 'index.js'
     },
     resolve: {
         alias: {
-            'graphql-toolkit': path.join(__dirname, '../dist/esnext')
+            'graphql-toolkit': path.join(__dirname, '..')
         },
         modules: ['node_modules', '../node_modules']
     },
-    externals: {
-        fs: 'empty'
+    optimization: {
+        usedExports: true
     }
 }

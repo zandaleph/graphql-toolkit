@@ -1,5 +1,6 @@
-import { GraphQLDirective, GraphQLSchema } from 'graphql';
 import { getDirectiveValues } from 'graphql/execution/values';
+import { GraphQLSchema } from 'graphql/type/schema';
+import { GraphQLDirective } from 'graphql/type/directives';
 
 export type DirectiveUseMap = { [key: string]: any };
 

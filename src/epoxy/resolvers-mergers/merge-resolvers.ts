@@ -1,6 +1,6 @@
 import { IResolvers } from '@kamilkisiela/graphql-tools';
 import * as deepMerge from 'deepmerge';
-import { GraphQLScalarType } from 'graphql';
+import { GraphQLScalarType } from 'graphql/type/definition';
 
 export type ResolversFactory<TContext> = (...args: any[]) => IResolvers<any, TContext>;
 export type ResolversDefinition<TContext> = IResolvers<any, TContext> | ResolversFactory<TContext>;

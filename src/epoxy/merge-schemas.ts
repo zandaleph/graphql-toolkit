@@ -2,7 +2,9 @@ import { GraphQLSchema, DocumentNode } from "graphql";
 import { IResolvers } from "@kamilkisiela/graphql-tools";
 import { mergeTypeDefs } from "./typedefs-mergers/merge-typedefs";
 import { mergeResolvers } from "./resolvers-mergers/merge-resolvers";
-import { extractResolversFromSchema, ResolversComposerMapping, composeResolvers, buildSchemaWithResolvers } from "../utils";
+import { ResolversComposerMapping, composeResolvers } from '../utils/resolvers-composition';
+import { buildSchemaWithResolvers } from '../utils/build-schema-with-resolvers';
+import { extractResolversFromSchema } from '../utils/extract-resolvers-from-schema';
 
 export interface MergeSchemasConfig<Resolvers extends IResolvers = IResolvers> {
     schemas: GraphQLSchema[];

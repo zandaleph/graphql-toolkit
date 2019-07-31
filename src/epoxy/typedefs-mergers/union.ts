@@ -1,7 +1,7 @@
-import { UnionTypeDefinitionNode, UnionTypeExtensionNode } from 'graphql';
 import { mergeDirectives } from './directives';
 import { mergeNamedTypeArray } from './merge-named-type-array';
 import { Config } from './merge-typedefs';
+import { UnionTypeDefinitionNode, UnionTypeExtensionNode } from 'graphql/language/ast';
 
 export function mergeUnion(first: UnionTypeDefinitionNode | UnionTypeExtensionNode, second: UnionTypeDefinitionNode | UnionTypeExtensionNode, config?: Config): UnionTypeDefinitionNode | UnionTypeExtensionNode {
   if (second) {

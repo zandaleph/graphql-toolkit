@@ -1,5 +1,4 @@
 import { Config } from './merge-typedefs';
-import { DefinitionNode } from 'graphql';
 import {
   isGraphQLEnum,
   isGraphQLInputType,
@@ -22,6 +21,7 @@ import { mergeInputType } from './input-type';
 import { mergeInterface } from './interface';
 import { mergeDirective } from './directives';
 import { collectComment } from './comments';
+import { DefinitionNode } from 'graphql/language/ast';
 
 export type MergedResultMap = { [name: string]: DefinitionNode };
 
