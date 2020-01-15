@@ -863,6 +863,39 @@ describe('graphql-tag-pluck', () => {
       }
     `))
   })
+  
+  it('should pluck graphql-tag template literals from code string', async () => {
+    const gqlString = await gqlPluck.fromCodeString(freeText(`
+      import gql from 'graphql-tag'
+      import { graphql } from 'gatsby' 
+
+      const doc = gql\`
+        query foo {
+          foo {
+            id
+          }
+        }
+      \`
+
+      const query = graphql\`
+        query bar {
+          bar {
+            id
+          }
+        }
+      \`
+
+      
+    `), { modules: [{ name: 'gatsby', identifier: 'graphql' }] })
+
+    expect(gqlString).toEqual(freeText(`
+      query bar {
+        bar {
+          id
+        }
+      }
+    `))
+  })
 
   it('should pluck graphql-tag template literals from a .js file', async () => {
     const file = await createTmpFile({
